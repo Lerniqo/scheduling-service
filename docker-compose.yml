@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: scheduling_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: scheduling_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432" # host:container
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: scheduling_service
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: scheduling_db
+    ports:
+      - "3004:3004"
+    command: ["node", "dist/main.js"]
+
+volumes:
+  db_data:

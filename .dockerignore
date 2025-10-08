@@ -1,0 +1,32 @@
+# dependencies
+node_modules
+pnpm-store
+
+# production
+build
+
+# misc
+.DS_Store
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# source maps
+*.map
+
+# tests
+coverage
+
+# env files (don’t bake secrets)
+.env
+.env.*
+
+# git
+.git
+.gitignore
+
+# editor
+.vscode
+.idea
