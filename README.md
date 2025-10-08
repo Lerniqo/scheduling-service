@@ -57,6 +57,41 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+## Docker
+
+This service includes a production-ready multi-stage `Dockerfile` and a `docker-compose.yml` for local development with PostgreSQL.
+
+Prerequisites
+- Docker Desktop should be installed and running (Windows). If you see an error like `open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified`, start Docker Desktop and try again.
+
+Build image
+```powershell
+docker build -t scheduling-service:dev .
+```
+
+Run with Docker (single container)
+```powershell
+docker run --rm -p 3004:3004 `
+  -e NODE_ENV=production `
+  -e PORT=3004 `
+  -e DATABASE_URL=postgresql://user:password@host:5432/db?sslmode=require `
+  scheduling-service:dev
+```
+
+Run with Docker Compose (app + Postgres for local dev)
+```powershell
+docker compose up --build
+```
+
+Compose details
+- App available at http://localhost:3004
+- Postgres exposed at host port 5433 (container port 5432)
+- App uses discrete DB_* env vars in compose to connect to the `db` service
+
+Environment variables
+- Default `PORT` is 3004 (configurable)
+- For cloud DBs, prefer `DATABASE_URL`. For local dev via compose, DB_* vars are provided automatically to the app container.
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
