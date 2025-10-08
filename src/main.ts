@@ -1,8 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3004);
+  const config = app.get(ConfigService);
+  const port = config.get<number>('PORT', 3004);
+  await app.listen(port);
 }
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Failed to start the server', err);
+  process.exit(1);
+});
