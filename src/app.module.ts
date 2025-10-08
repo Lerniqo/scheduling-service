@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SchedulingModule } from './scheduling/scheduling.module';
+import { AvailabilityModule } from './availability/availability.module';
 import { HealthModule } from './health/health.module';
 import databaseConfig from './config/database.config';
 
@@ -58,6 +59,7 @@ import databaseConfig from './config/database.config';
       inject: [ConfigService],
     }),
     SchedulingModule,
+    AvailabilityModule,
     HealthModule,
   ],
   controllers: [AppController],
