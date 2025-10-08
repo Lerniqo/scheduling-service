@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SchedulingModule } from './scheduling/scheduling.module';
+import { HealthModule } from './health/health.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -57,6 +58,7 @@ import databaseConfig from './config/database.config';
       inject: [ConfigService],
     }),
     SchedulingModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
