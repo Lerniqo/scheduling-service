@@ -5,15 +5,15 @@ This document provides comprehensive API testing examples for the Scheduling Ser
 
 ## Base Configuration
 
-**Base URL:** `http://localhost:3000`
+**Base URL:** `http://localhost:3004`
 
 **Required Headers:**
 ```json
 {
   "Content-Type": "application/json",
   "x-user-id": "teacher123",
-  "x-user-role": "teacher",
-  "x-user-permissions": "manage:sessions,view:availability"
+  "x-user-role": "teacher",  
+  "x-user-permissions": "manage_availability,create_session,view_availability"
 }
 ```
 
@@ -31,7 +31,7 @@ The service uses header-based authentication from API Gateway:
 #### GET /health/live
 **Description:** Check if service is running
 ```bash
-curl -X GET http://localhost:3000/health/live
+curl -X GET http://localhost:3004/health/live
 ```
 
 **Expected Response:**
@@ -49,7 +49,7 @@ curl -X GET http://localhost:3000/health/live
 #### GET /health/ready
 **Description:** Check if service is ready to handle requests
 ```bash
-curl -X GET http://localhost:3000/health/ready
+curl -X GET http://localhost:3004/health/ready
 ```
 
 ### 2. Teacher Availability Management
@@ -63,30 +63,60 @@ curl -X GET http://localhost:3000/health/ready
   "Content-Type": "application/json",
   "x-user-id": "teacher123",
   "x-user-role": "teacher",
-  "x-user-permissions": "manage:availability"
+  "x-user-permissions": "manage_availability"
 }
 ```
 
-**Request:**
+**Request (Free Individual Sessions):**
 ```bash
-curl -X POST http://localhost:3000/api/scheduling/availability \
+curl -X POST http://localhost:3004/api/scheduling/availability \
   -H "Content-Type: application/json" \
   -H "x-user-id: teacher123" \
   -H "x-user-role: teacher" \
-  -H "x-user-permissions: manage:availability" \
+  -H "x-user-permissions: manage_availability" \
   -d '{
     "availabilities": [
       {
         "startTime": "2025-10-12T10:00:00.000Z",
-        "endTime": "2025-10-12T11:00:00.000Z"
+        "endTime": "2025-10-12T11:00:00.000Z",
+        "isPaid": false
       },
       {
         "startTime": "2025-10-12T14:00:00.000Z",
-        "endTime": "2025-10-12T15:00:00.000Z"
+        "endTime": "2025-10-12T15:00:00.000Z",
+        "isPaid": false
       },
       {
         "startTime": "2025-10-13T09:00:00.000Z",
-        "endTime": "2025-10-13T10:00:00.000Z"
+        "endTime": "2025-10-13T10:00:00.000Z",
+        "isPaid": false
+      }
+    ]
+  }'
+```
+
+**Request (Paid Individual Sessions):**
+```bash
+curl -X POST http://localhost:3004/api/scheduling/availability \
+  -H "Content-Type: application/json" \
+  -H "x-user-id: teacher123" \
+  -H "x-user-role: teacher" \
+  -H "x-user-permissions: manage_availability" \
+  -d '{
+    "availabilities": [
+      {
+        "startTime": "2025-10-12T10:00:00.000Z",
+        "endTime": "2025-10-12T11:00:00.000Z",
+        "isPaid": true,
+        "price": 50.00,
+        "sessionDescription": "Advanced mathematics tutoring session"
+      },
+      {
+        "startTime": "2025-10-12T14:00:00.000Z",
+        "endTime": "2025-10-12T15:00:00.000Z",
+        "isPaid": true,
+        "price": 75.00,
+        "sessionDescription": "Advanced physics tutoring session"
       }
     ]
   }'
@@ -104,14 +134,14 @@ curl -X POST http://localhost:3000/api/scheduling/availability \
 
 **Request:**
 ```bash
-curl -X GET http://localhost:3000/api/scheduling/teachers/teacher123/availability \
+curl -X GET http://localhost:3004/api/scheduling/teachers/teacher123/availability \
   -H "Content-Type: application/json" \
   -H "x-user-id: student456" \
   -H "x-user-role: student" \
-  -H "x-user-permissions: view:availability"
+  -H "x-user-permissions: view_availability"
 ```
 
-**Expected Response:**
+**Expected Response (with pricing information):**
 ```json
 [
   {
@@ -120,6 +150,9 @@ curl -X GET http://localhost:3000/api/scheduling/teachers/teacher123/availabilit
     "start_time": "2025-10-12T10:00:00.000Z",
     "end_time": "2025-10-12T11:00:00.000Z",
     "is_booked": false,
+    "is_paid": true,
+    "price_per_session": "50.00",
+    "session_description": "Advanced mathematics tutoring session",
     "created_at": "2025-10-11T01:30:15.123Z",
     "updated_at": "2025-10-11T01:30:15.123Z"
   },
@@ -129,6 +162,9 @@ curl -X GET http://localhost:3000/api/scheduling/teachers/teacher123/availabilit
     "start_time": "2025-10-12T14:00:00.000Z",
     "end_time": "2025-10-12T15:00:00.000Z",
     "is_booked": false,
+    "is_paid": false,
+    "price_per_session": null,
+    "session_description": null,
     "created_at": "2025-10-11T01:30:15.123Z",
     "updated_at": "2025-10-11T01:30:15.123Z"
   }
@@ -146,37 +182,41 @@ curl -X GET http://localhost:3000/api/scheduling/teachers/teacher123/availabilit
   "Content-Type": "application/json",
   "x-user-id": "student456",
   "x-user-role": "student",
-  "x-user-permissions": "book:sessions"
+  "x-user-permissions": "book_sessions"
 }
 ```
 
 **Request:**
 ```bash
-curl -X POST http://localhost:3000/api/scheduling/book-session \
+curl -X POST http://localhost:3004/api/scheduling/book-session \
   -H "Content-Type: application/json" \
   -H "x-user-id: student456" \
   -H "x-user-role: student" \
-  -H "x-user-permissions: book:sessions" \
+  -H "x-user-permissions: book_sessions" \
   -d '{
     "availabilityId": "550e8400-e29b-41d4-a716-446655440001"
   }'
 ```
 
-**Expected Response:**
+**Expected Response (with Zoom integration and inherited pricing):**
 ```json
 {
   "session_id": "660f9500-f3ac-52e5-b827-557766551001",
   "teacher_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "session_type": "ONE_ON_ONE",
-  "title": "One-on-One Session",
-  "description": null,
+  "title": "Advanced mathematics tutoring session",
+  "description": "Advanced mathematics tutoring session",
   "start_time": "2025-10-12T10:00:00.000Z",
   "end_time": "2025-10-12T11:00:00.000Z",
   "status": "SCHEDULED",
-  "is_paid": false,
-  "price": null,
+  "is_paid": true,
+  "price": "50.00",
   "max_attendees": 1,
-  "video_conference_link": "https://meet.jit.si/session-1728612615123-abc123def",
+  "video_conference_link": "https://zoom.us/j/123456789?pwd=abcdef123456",
+  "zoom_meeting_id": "123456789",
+  "zoom_join_url": "https://zoom.us/j/123456789?pwd=abcdef123456",
+  "zoom_start_url": "https://zoom.us/s/123456789?zak=eyJhbGciOiJIUzI1NiJ9",
+  "zoom_password": "sessionPwd123",
   "attendees_count": 1
 }
 ```
@@ -192,17 +232,17 @@ curl -X POST http://localhost:3000/api/scheduling/book-session \
   "Content-Type": "application/json",
   "x-user-id": "teacher123",
   "x-user-role": "teacher",
-  "x-user-permissions": "create:group-sessions"
+  "x-user-permissions": "create_session"
 }
 ```
 
 **Request:**
 ```bash
-curl -X POST http://localhost:3000/api/scheduling/group-sessions \
+curl -X POST http://localhost:3004/api/scheduling/group-sessions \
   -H "Content-Type: application/json" \
   -H "x-user-id: teacher123" \
   -H "x-user-role: teacher" \
-  -H "x-user-permissions: create:group-sessions" \
+  -H "x-user-permissions: create_session" \
   -d '{
     "title": "Advanced JavaScript Workshop",
     "description": "Deep dive into advanced JavaScript concepts including async/await, closures, and design patterns",
@@ -228,7 +268,11 @@ curl -X POST http://localhost:3000/api/scheduling/group-sessions \
   "is_paid": true,
   "price": "49.99",
   "max_attendees": 15,
-  "video_conference_link": "https://meet.jit.si/session-1728612715456-def456ghi",
+  "video_conference_link": "https://zoom.us/j/987654321?pwd=def456ghi789",
+  "zoom_meeting_id": "987654321",
+  "zoom_join_url": "https://zoom.us/j/987654321?pwd=def456ghi789",
+  "zoom_start_url": "https://zoom.us/s/987654321?zak=eyJhbGciOiJIUzI1NiJ9",
+  "zoom_password": "groupPwd456",
   "attendees_count": 0
 }
 ```
@@ -238,11 +282,11 @@ curl -X POST http://localhost:3000/api/scheduling/group-sessions \
 
 **Request:**
 ```bash
-curl -X GET http://localhost:3000/api/scheduling/group-sessions \
+curl -X GET http://localhost:3004/api/scheduling/group-sessions \
   -H "Content-Type: application/json" \
   -H "x-user-id: student456" \
   -H "x-user-role: student" \
-  -H "x-user-permissions: view:sessions"
+  -H "x-user-permissions: view_sessions"
 ```
 
 **Expected Response:**
@@ -260,7 +304,11 @@ curl -X GET http://localhost:3000/api/scheduling/group-sessions \
     "is_paid": true,
     "price": "49.99",
     "max_attendees": 15,
-    "video_conference_link": "https://meet.jit.si/session-1728612715456-def456ghi",
+    "video_conference_link": "https://zoom.us/j/987654321?pwd=def456ghi789",
+    "zoom_meeting_id": "987654321",
+    "zoom_join_url": "https://zoom.us/j/987654321?pwd=def456ghi789",
+    "zoom_start_url": "https://zoom.us/s/987654321?zak=eyJhbGciOiJIUzI1NiJ9",
+    "zoom_password": "groupPwd456",
     "attendees_count": 3
   }
 ]
@@ -277,17 +325,17 @@ curl -X GET http://localhost:3000/api/scheduling/group-sessions \
   "Content-Type": "application/json",
   "x-user-id": "student456",
   "x-user-role": "student",
-  "x-user-permissions": "enroll:sessions"
+  "x-user-permissions": "enroll_sessions"
 }
 ```
 
 **Request (Free Session):**
 ```bash
-curl -X POST http://localhost:3000/api/scheduling/enroll-group-session \
+curl -X POST http://localhost:3004/api/scheduling/enroll-group-session \
   -H "Content-Type: application/json" \
   -H "x-user-id: student456" \
   -H "x-user-role: student" \
-  -H "x-user-permissions: enroll:sessions" \
+  -H "x-user-permissions: enroll_sessions" \
   -d '{
     "sessionId": "770a0600-04bd-63f6-c938-668877662001"
   }'
@@ -307,7 +355,11 @@ curl -X POST http://localhost:3000/api/scheduling/enroll-group-session \
   "is_paid": true,
   "price": "49.99",
   "max_attendees": 15,
-  "video_conference_link": "https://meet.jit.si/session-1728612715456-def456ghi",
+  "video_conference_link": "https://zoom.us/j/987654321?pwd=def456ghi789",
+  "zoom_meeting_id": "987654321",
+  "zoom_join_url": "https://zoom.us/j/987654321?pwd=def456ghi789",
+  "zoom_start_url": "https://zoom.us/s/987654321?zak=eyJhbGciOiJIUzI1NiJ9",
+  "zoom_password": "groupPwd456",
   "attendees_count": 4
 }
 ```
@@ -326,20 +378,20 @@ curl -X POST http://localhost:3000/api/scheduling/enroll-group-session \
 
 **Request (Teacher):**
 ```bash
-curl -X GET http://localhost:3000/api/scheduling/me/sessions \
+curl -X GET http://localhost:3004/api/scheduling/me/sessions \
   -H "Content-Type: application/json" \
   -H "x-user-id: teacher123" \
   -H "x-user-role: teacher" \
-  -H "x-user-permissions: view:own-sessions"
+  -H "x-user-permissions: view_own_sessions"
 ```
 
 **Request (Student):**
 ```bash
-curl -X GET http://localhost:3000/api/scheduling/me/sessions \
+curl -X GET http://localhost:3004/api/scheduling/me/sessions \
   -H "Content-Type: application/json" \
   -H "x-user-id: student456" \
   -H "x-user-role: student" \
-  -H "x-user-permissions: view:own-sessions"
+  -H "x-user-permissions: view_own_sessions"
 ```
 
 **Expected Response:**
@@ -357,7 +409,11 @@ curl -X GET http://localhost:3000/api/scheduling/me/sessions \
     "is_paid": false,
     "price": null,
     "max_attendees": 1,
-    "video_conference_link": "https://meet.jit.si/session-1728612615123-abc123def",
+    "video_conference_link": "https://zoom.us/j/123456789?pwd=abcdef123456",
+    "zoom_meeting_id": "123456789",
+    "zoom_join_url": "https://zoom.us/j/123456789?pwd=abcdef123456",
+    "zoom_start_url": "https://zoom.us/s/123456789?zak=eyJhbGciOiJIUzI1NiJ9",
+    "zoom_password": "sessionPwd123",
     "attendees_count": 1
   },
   {
@@ -372,7 +428,11 @@ curl -X GET http://localhost:3000/api/scheduling/me/sessions \
     "is_paid": true,
     "price": "49.99",
     "max_attendees": 15,
-    "video_conference_link": "https://meet.jit.si/session-1728612715456-def456ghi",
+    "video_conference_link": "https://zoom.us/j/987654321?pwd=def456ghi789",
+    "zoom_meeting_id": "987654321",
+    "zoom_join_url": "https://zoom.us/j/987654321?pwd=def456ghi789",
+    "zoom_start_url": "https://zoom.us/s/987654321?zak=eyJhbGciOiJIUzI1NiJ9",
+    "zoom_password": "groupPwd456",
     "attendees_count": 4
   }
 ]
@@ -437,17 +497,29 @@ curl -X GET http://localhost:3000/api/scheduling/me/sessions \
 ## Testing Scenarios
 
 ### Scenario 1: Complete Teacher Workflow
-1. Create availability slots (POST /api/scheduling/availability)
+1. Create availability slots with pricing (POST /api/scheduling/availability)
 2. View created availability (GET /api/scheduling/teachers/:teacherId/availability)
 3. Create a group session (POST /api/scheduling/group-sessions)
 4. View teacher's sessions (GET /api/scheduling/me/sessions)
 
-### Scenario 2: Complete Student Workflow
-1. View teacher availability (GET /api/scheduling/teachers/:teacherId/availability)
-2. Book one-on-one session (POST /api/scheduling/book-session)
-3. View available group sessions (GET /api/scheduling/group-sessions)
-4. Enroll in group session (POST /api/scheduling/enroll-group-session)
-5. View student's sessions (GET /api/scheduling/me/sessions)
+### Scenario 2: Complete Student Workflow (Individual Sessions)
+1. View teacher availability with pricing (GET /api/scheduling/teachers/:teacherId/availability)
+2. See pricing information before booking
+3. Book one-on-one session (POST /api/scheduling/book-session)
+4. View student's sessions (GET /api/scheduling/me/sessions)
+
+### Scenario 3: Complete Student Workflow (Group Sessions)
+1. View available group sessions (GET /api/scheduling/group-sessions)
+2. Enroll in group session (POST /api/scheduling/enroll-group-session)
+3. View student's sessions (GET /api/scheduling/me/sessions)
+
+### Scenario 4: Individual Session Pricing Workflow
+1. **Teacher**: Create paid availability slots with pricing
+   - Set `isPaid: true`, `price: 50.00`, and `sessionDescription`
+2. **Student**: View availability to see pricing transparency
+   - See `is_paid: true`, `price_per_session: "50.00"`, `session_description`
+3. **Student**: Book session knowing the exact price
+4. **System**: Session inherits pricing from availability slot
 
 ### Scenario 3: Edge Cases Testing
 1. **Double Booking:** Try to book the same availability slot twice
@@ -467,10 +539,29 @@ This ensures deterministic UUID generation where the same string always produces
 
 ## Video Conference Integration
 
-All sessions automatically get Jitsi Meet links:
-- Format: `https://meet.jit.si/session-{timestamp}-{random}`
+All sessions automatically get Zoom meeting links (with Jitsi fallback):
+- **Primary**: Zoom meetings with enterprise integration
+  - Format: `https://zoom.us/j/{meetingId}?pwd={password}`
+  - Includes join URL, start URL (for hosts), and meeting password
+  - Scheduled meetings with waiting room and educational settings
+- **Fallback**: Jitsi Meet links if Zoom API fails
+  - Format: `https://meet.jit.si/session-{timestamp}-{random}`
 - Unique for each session
 - Ready to use immediately after session creation
+
+## Individual Session Pricing
+
+**NEW FEATURE**: Teachers can now set pricing for individual tutoring sessions:
+
+- **Free Sessions**: Set `isPaid: false` (default)
+- **Paid Sessions**: Set `isPaid: true` with `price` and optional `sessionDescription`
+- **Student Visibility**: Students can see pricing information before booking
+- **Price Inheritance**: Booked sessions inherit pricing from availability slots
+
+**Pricing Fields in Availability:**
+- `is_paid`: Boolean indicating if session requires payment
+- `price_per_session`: Decimal price (e.g., 50.00)
+- `session_description`: Optional description (e.g., "Advanced mathematics tutoring")
 
 ## Testing Tools
 
@@ -484,11 +575,11 @@ All sessions automatically get Jitsi Meet links:
 Import the following environment variables:
 ```json
 {
-  "base_url": "http://localhost:3000",
+  "base_url": "http://localhost:3004",
   "teacher_id": "teacher123",
   "student_id": "student456",
-  "teacher_permissions": "manage:availability,create:group-sessions,view:own-sessions",
-  "student_permissions": "view:availability,book:sessions,enroll:sessions,view:own-sessions"
+  "teacher_permissions": "manage_availability,create_session,view_own_sessions",
+  "student_permissions": "view_availability,book_sessions,enroll_sessions,view_own_sessions"
 }
 ```
 
@@ -499,15 +590,31 @@ Import the following environment variables:
 3. **Authentication:** All endpoints require proper headers from API Gateway
 4. **Validation:** Request payloads are validated using class-validator decorators
 5. **Database:** PostgreSQL with UUID columns and proper constraints
-6. **Environment:** Service runs on port 3000 by default
+6. **Environment:** Service runs on port 3004 by default
+7. **Individual Session Pricing:** Teachers can set pricing for availability slots, students see pricing before booking
+8. **Zoom Integration:** Real Zoom meetings with enterprise credentials (fallback to Jitsi if API fails)
+9. **Permission Format:** Use underscores in permissions (e.g., `manage_availability` not `manage:availability`)
 
 ## Troubleshooting
 
 ### Common Issues:
-1. **Connection Refused:** Ensure the service is running on port 3000
+1. **Connection Refused:** Ensure the service is running on port 3004
 2. **Authentication Errors:** Verify all required headers are present
 3. **UUID Errors:** Resolved by automatic string-to-UUID conversion
 4. **Time Validation:** Ensure ISO 8601 format for all timestamps
 5. **Database Errors:** Check PostgreSQL connection and schema
+6. **Zoom API Errors:** Check environment variables for Zoom credentials (ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET)
+7. **Permission Errors:** Use underscore format in permissions (e.g., `manage_availability`)
+8. **Pricing Validation:** Price must be positive decimal with max 2 decimal places
+
+## Environment Variables
+
+Required environment variables for Zoom integration:
+```bash
+ZOOM_ACCOUNT_ID=your-zoom-account-id
+ZOOM_CLIENT_ID=your-zoom-client-id  
+ZOOM_CLIENT_SECRET=your-zoom-client-secret
+PORT=3004
+```
 
 For additional support, check the application logs for detailed error messages.

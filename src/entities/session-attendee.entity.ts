@@ -19,7 +19,10 @@ export class SessionAttendee {
   @Column({ type: 'uuid' })
   student_id: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   booking_time: Date;
 
   @Column({ type: 'uuid', nullable: true })
@@ -29,6 +32,9 @@ export class SessionAttendee {
   @JoinColumn({ name: 'session_id' })
   session: any;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   created_at: Date;
 }

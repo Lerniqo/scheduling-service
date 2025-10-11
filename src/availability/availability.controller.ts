@@ -9,7 +9,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { AvailabilityService } from './availability.service';
-import { UpdateAvailabilityDto } from './dto/update-availability-slots.dto';
+import { UpdateAvailabilitySlotsDto } from './dto/update-availability-slots.dto';
 
 @Controller('api/scheduling')
 export class AvailabilityController {
@@ -21,7 +21,7 @@ export class AvailabilityController {
     @Headers('x-user-id') userId: string,
     @Headers('x-user-role') userRole: string,
     @Headers('x-user-permissions') userPermissions: string,
-    @Body() dto: UpdateAvailabilityDto,
+    @Body() dto: UpdateAvailabilitySlotsDto,
   ) {
     if (!userId || !userRole) {
       throw new UnauthorizedException('Missing user authentication headers');

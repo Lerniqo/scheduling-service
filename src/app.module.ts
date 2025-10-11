@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { SchedulingModule } from './scheduling/scheduling.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { HealthModule } from './health/health.module';
+import { ZoomModule } from './zoom/zoom.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -46,6 +47,9 @@ import databaseConfig from './config/database.config';
           then: Joi.optional(),
           otherwise: Joi.required(),
         }),
+        ZOOM_ACCOUNT_ID: Joi.string().optional(),
+        ZOOM_CLIENT_ID: Joi.string().optional(),
+        ZOOM_CLIENT_SECRET: Joi.string().optional(),
       }),
       validationOptions: {
         allowUnknown: true,
@@ -61,6 +65,7 @@ import databaseConfig from './config/database.config';
     SchedulingModule,
     AvailabilityModule,
     HealthModule,
+    ZoomModule,
   ],
   controllers: [AppController],
   providers: [AppService],

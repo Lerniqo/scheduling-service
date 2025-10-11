@@ -63,7 +63,7 @@ export class Booking {
   })
   status: BookingStatus;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   bookingDate: Date;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
@@ -78,14 +78,27 @@ export class Booking {
   @Column({ type: 'varchar', length: 255, nullable: true })
   paymentId: string; // Reference to payment system
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   confirmedAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   cancelledAt: Date;
 
   @Column({ type: 'text', nullable: true })
   cancellationReason: string;
+
+  // Zoom Integration Fields
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  zoom_meeting_id: string; // Zoom meeting ID for individual sessions
+
+  @Column({ type: 'text', nullable: true })
+  zoom_join_url: string; // URL for participant to join
+
+  @Column({ type: 'text', nullable: true })
+  zoom_start_url: string; // URL for teacher to start (for individual sessions)
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  zoom_password: string; // Meeting password
 
   // Relationship with Availability (for individual bookings)
   @ManyToOne('Availability', 'bookings', {
@@ -108,9 +121,16 @@ export class Booking {
   })
   groupSessions: GroupSession[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
   updatedAt: Date;
 }
