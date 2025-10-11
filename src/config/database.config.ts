@@ -15,6 +15,9 @@ export default registerAs('database', (): TypeOrmModuleOptions => {
       logging: process.env.NODE_ENV === 'development',
       ssl: { rejectUnauthorized: false }, // Required for most cloud databases
       autoLoadEntities: true,
+      extra: {
+        timezone: 'UTC',
+      },
     };
   }
 
@@ -34,5 +37,8 @@ export default registerAs('database', (): TypeOrmModuleOptions => {
         ? { rejectUnauthorized: false }
         : false,
     autoLoadEntities: true,
+    extra: {
+      timezone: 'UTC',
+    },
   };
 });

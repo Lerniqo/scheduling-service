@@ -31,15 +31,15 @@ export class Session {
   session_type: SessionType;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  title: string;
+  title: string | null;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string | null;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   start_time: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   end_time: Date;
 
   @Column({ type: 'enum', enum: SessionStatus, default: SessionStatus.SCHEDULED })
@@ -49,20 +49,40 @@ export class Session {
   is_paid: boolean;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  price: number;
+  price: number | null;
 
   @Column({ type: 'int', nullable: true })
-  max_attendees: number;
+  max_attendees: number | null;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  video_conference_link: string;
+  video_conference_link: string | null;
+
+  // Zoom Integration Fields
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  zoom_meeting_id: string | null; // Zoom meeting ID
+
+  @Column({ type: 'text', nullable: true })
+  zoom_join_url: string | null; // URL for participants to join
+
+  @Column({ type: 'text', nullable: true })
+  zoom_start_url: string | null; // URL for host to start meeting
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  zoom_password: string | null; // Meeting password
 
   @OneToMany('SessionAttendee', 'session')
   attendees: any[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   created_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
   updated_at: Date;
 }

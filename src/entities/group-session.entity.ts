@@ -51,10 +51,10 @@ export class GroupSession {
   })
   type: SessionType;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   startTime: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   endTime: Date;
 
   @Column({
@@ -75,6 +75,19 @@ export class GroupSession {
 
   @Column({ type: 'varchar', length: 500, nullable: true })
   location: string; // Physical location or online meeting link
+
+  // Zoom Integration Fields
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  zoom_meeting_id: string; // Zoom meeting ID
+
+  @Column({ type: 'text', nullable: true })
+  zoom_join_url: string; // URL for participants to join
+
+  @Column({ type: 'text', nullable: true })
+  zoom_start_url: string; // URL for host to start meeting
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  zoom_password: string; // Meeting password
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   subject: string; // Subject area
@@ -100,7 +113,7 @@ export class GroupSession {
   @Column({ type: 'varchar', length: 50, nullable: true })
   recurringPattern: string; // weekly, biweekly, monthly, etc.
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   recurringEndDate: Date;
 
   @Column({ type: 'text', nullable: true })
@@ -110,9 +123,16 @@ export class GroupSession {
   @ManyToMany('Booking', 'groupSessions')
   bookings: Booking[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ 
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
   updatedAt: Date;
 }

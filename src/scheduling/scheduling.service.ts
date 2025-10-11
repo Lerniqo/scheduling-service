@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Session, SessionType, SessionStatus } from '../entities/session.entity';
@@ -9,16 +9,20 @@ import { BookSessionDto } from './dto/book-session.dto';
 import { EnrollGroupSessionDto } from './dto/enroll-group-session.dto';
 import { SessionResponseDto, PaymentResponseDto } from './dto/response.dto';
 import { AvailabilityService } from '../availability/availability.service';
+import { ZoomService } from '../zoom/zoom.service';
 import { ensureUUID } from '../utils/uuid.utils';
 
 @Injectable()
 export class SchedulingService {
+  private readonly logger = new Logger(SchedulingService.name);
+
   constructor(
     @InjectRepository(Session)
     private readonly sessionRepository: Repository<Session>,
     @InjectRepository(SessionAttendee)
     private readonly sessionAttendeeRepository: Repository<SessionAttendee>,
     private readonly availabilityService: AvailabilityService,
+    private readonly zoomService: ZoomService,
   ) {}
 
   async createGroupSession(teacherId: string, dto: CreateGroupSessionDto): Promise<SessionResponseDto> {
@@ -33,9 +37,28 @@ export class SchedulingService {
       throw new BadRequestException('startTime must be before endTime');
     }
 
-    // Generate video conference link (using Jitsi Meet)
-    const roomName = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const videoConferenceLink = `https://meet.jit.si/${roomName}`;
+    // Create Zoom meeting for the group session
+    const durationMinutes = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60));
+    
+    this.logger.log(`Creating Zoom meeting for group session: ${dto.title}`);
+    
+    let zoomMeeting;
+    try {
+      zoomMeeting = await this.zoomService.createSessionMeeting(
+        dto.title,
+        'Group Session',
+        start,
+        durationMinutes
+      );
+      this.logger.log(`✅ Zoom meeting created successfully: Meeting ID ${zoomMeeting.id}`);
+    } catch (error) {
+      this.logger.error('❌ Zoom meeting creation failed:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      throw new BadRequestException(`Failed to create Zoom meeting: ${error.message}`);
+    }
 
     const session = this.sessionRepository.create({
       teacher_id: teacherUUID,
@@ -47,7 +70,11 @@ export class SchedulingService {
       is_paid: dto.isPaid || false,
       price: dto.price,
       max_attendees: dto.maxAttendees || 10,
-      video_conference_link: videoConferenceLink,
+      video_conference_link: zoomMeeting.join_url,
+      zoom_meeting_id: zoomMeeting.id.toString(),
+      zoom_join_url: zoomMeeting.join_url,
+      zoom_start_url: zoomMeeting.start_url,
+      zoom_password: zoomMeeting.password,
       status: SessionStatus.SCHEDULED,
     });
 
@@ -67,6 +94,10 @@ export class SchedulingService {
       max_attendees: savedSession.max_attendees,
       video_conference_link: savedSession.video_conference_link,
       attendees_count: 0,
+      zoom_meeting_id: savedSession.zoom_meeting_id,
+      zoom_join_url: savedSession.zoom_join_url,
+      zoom_start_url: savedSession.zoom_start_url,
+      zoom_password: savedSession.zoom_password,
     };
   }
 
@@ -84,22 +115,46 @@ export class SchedulingService {
       // Mark availability as booked
       await this.availabilityService.bookAvailabilitySlot(dto.availabilityId);
 
-      // Generate video conference link
-      const roomName = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      const videoConferenceLink = `https://meet.jit.si/${roomName}`;
+      // Create Zoom meeting for one-on-one session
+      const durationMinutes = Math.ceil((availability.end_time.getTime() - availability.start_time.getTime()) / (1000 * 60));
+      
+      this.logger.log(`Creating Zoom meeting for session: ${availability.session_description || 'One-on-One Session'}`);
+      
+      let zoomMeeting;
+      try {
+        zoomMeeting = await this.zoomService.createSessionMeeting(
+          availability.session_description || 'One-on-One Session',
+          'Individual Tutoring',
+          availability.start_time,
+          durationMinutes
+        );
+        this.logger.log(`✅ Zoom meeting created successfully: Meeting ID ${zoomMeeting.id}`);
+      } catch (error) {
+        this.logger.error('❌ Zoom meeting creation failed:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status
+        });
+        throw new BadRequestException(`Failed to create Zoom meeting: ${error.message}`);
+      }
 
-      // Create session
-      const session = this.sessionRepository.create({
-        teacher_id: availability.teacher_id,
-        session_type: SessionType.ONE_ON_ONE,
-        title: 'One-on-One Session',
-        start_time: availability.start_time,
-        end_time: availability.end_time,
-        is_paid: false, // Assuming one-on-one sessions are free unless specified
-        video_conference_link: videoConferenceLink,
-        status: SessionStatus.SCHEDULED,
-        max_attendees: 1,
-      });
+      // Create session with pricing from availability
+      const session = new Session();
+      session.teacher_id = availability.teacher_id;
+      session.session_type = SessionType.ONE_ON_ONE;
+      session.title = availability.session_description || 'One-on-One Session';
+      session.description = availability.session_description;
+      session.start_time = availability.start_time;
+      session.end_time = availability.end_time;
+      session.is_paid = availability.is_paid || false;
+      session.price = availability.price_per_session;
+      session.video_conference_link = zoomMeeting.join_url;
+      session.zoom_meeting_id = zoomMeeting.id.toString();
+      session.zoom_join_url = zoomMeeting.join_url;
+      session.zoom_start_url = zoomMeeting.start_url;
+      session.zoom_password = zoomMeeting.password;
+      session.status = SessionStatus.SCHEDULED;
+      session.max_attendees = 1;
 
       const savedSession = await this.sessionRepository.save(session);
 
@@ -112,6 +167,7 @@ export class SchedulingService {
 
       await this.sessionAttendeeRepository.save(attendee);
 
+      // Only return join URL to student
       return {
         session_id: savedSession.session_id,
         teacher_id: savedSession.teacher_id,
@@ -124,8 +180,10 @@ export class SchedulingService {
         is_paid: savedSession.is_paid,
         price: savedSession.price,
         max_attendees: savedSession.max_attendees,
-        video_conference_link: savedSession.video_conference_link,
+        video_conference_link: savedSession.zoom_join_url,
         attendees_count: 1,
+        zoom_meeting_id: savedSession.zoom_meeting_id,
+        zoom_join_url: savedSession.zoom_join_url,
       };
     } catch (error) {
       console.error('Error booking session:', error);
@@ -154,7 +212,7 @@ export class SchedulingService {
       where: { session_id: dto.sessionId }
     });
 
-    if (currentAttendees >= session.max_attendees) {
+    if (session.max_attendees && currentAttendees >= session.max_attendees) {
       throw new ConflictException('Session is full');
     }
 
@@ -189,6 +247,7 @@ export class SchedulingService {
       where: { session_id: dto.sessionId }
     });
 
+    // Only return join URL to student
     return {
       session_id: session.session_id,
       teacher_id: session.teacher_id,
@@ -201,8 +260,10 @@ export class SchedulingService {
       is_paid: session.is_paid,
       price: session.price,
       max_attendees: session.max_attendees,
-      video_conference_link: session.video_conference_link,
+      video_conference_link: session.zoom_join_url,
       attendees_count: updatedAttendeesCount,
+      zoom_meeting_id: session.zoom_meeting_id,
+      zoom_join_url: session.zoom_join_url,
     };
   }
 
@@ -234,6 +295,10 @@ export class SchedulingService {
         max_attendees: session.max_attendees,
         video_conference_link: session.video_conference_link,
         attendees_count: attendeesCount,
+        zoom_meeting_id: session.zoom_meeting_id,
+        zoom_join_url: session.zoom_join_url,
+        zoom_start_url: session.zoom_start_url,
+        zoom_password: session.zoom_password,
       });
     }
 
@@ -271,8 +336,12 @@ export class SchedulingService {
           is_paid: session.is_paid,
           price: session.price,
           max_attendees: session.max_attendees,
-          video_conference_link: session.video_conference_link,
+          video_conference_link: session.zoom_join_url,
           attendees_count: attendeesCount,
+          zoom_meeting_id: session.zoom_meeting_id,
+          zoom_join_url: session.zoom_join_url,
+          zoom_start_url: session.zoom_start_url,
+          zoom_password: session.zoom_password,
         });
       }
     }
@@ -296,7 +365,7 @@ export class SchedulingService {
       });
 
       // Only include sessions that aren't full
-      if (attendeesCount < session.max_attendees) {
+      if (session.max_attendees && attendeesCount < session.max_attendees) {
         result.push({
           session_id: session.session_id,
           teacher_id: session.teacher_id,
@@ -309,8 +378,10 @@ export class SchedulingService {
           is_paid: session.is_paid,
           price: session.price,
           max_attendees: session.max_attendees,
-          video_conference_link: session.video_conference_link,
+          video_conference_link: session.zoom_join_url,
           attendees_count: attendeesCount,
+          zoom_meeting_id: session.zoom_meeting_id,
+          zoom_join_url: session.zoom_join_url,
         });
       }
     }
