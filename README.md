@@ -23,7 +23,80 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**Scheduling Service Microservice** - A comprehensive NestJS-based service for managing teacher availability, session scheduling, bookings, and enrollments. This service integrates with video conferencing platforms and payment systems to provide a complete educational platform backend.
+
+## Features
+
+### Core Functionality
+- **Availability Management**: Teachers can define and update their available time slots
+- **Session Scheduling**: Create and manage both one-on-one and group sessions
+- **Booking & Enrollment**: Students can book individual sessions or enroll in group classes
+- **Payment Integration**: Handles both free and paid sessions with payment coordination
+- **Video Conferencing**: Automatic Jitsi Meet integration for live sessions
+- **Real-time Notifications**: Integration points for session reminders
+
+### Database Schema
+- **teacher_availability**: Time blocks when teachers are available
+- **scheduled_sessions**: Central table for all sessions (one-on-one and group)
+- **session_attendees**: Tracks student enrollments in sessions
+
+## API Endpoints
+
+### Teacher-Facing APIs
+
+#### POST `/api/scheduling/availability`
+Update teacher availability slots
+```json
+{
+  "availabilities": [
+    { "startTime": "2025-07-21T09:00:00Z", "endTime": "2025-07-21T12:00:00Z" }
+  ]
+}
+```
+
+#### POST `/api/scheduling/group-sessions`
+Create a new group session
+```json
+{
+  "title": "Mastering Quadratic Equations",
+  "description": "An in-depth look at factoring and solving.",
+  "startTime": "2025-07-22T14:00:00Z",
+  "endTime": "2025-07-22T15:00:00Z",
+  "isPaid": true,
+  "price": 500.00,
+  "maxAttendees": 20
+}
+```
+
+#### GET `/api/scheduling/me/sessions`
+Retrieve all sessions for authenticated teacher
+
+### Student-Facing APIs
+
+#### GET `/api/scheduling/teachers/{teacherId}/availability`
+Get available time slots for a specific teacher
+
+#### GET `/api/scheduling/group-sessions`
+List all upcoming, open group sessions
+
+#### POST `/api/scheduling/book-session`
+Book a one-on-one session
+```json
+{
+  "availabilityId": "avail-uuid-123"
+}
+```
+
+#### POST `/api/scheduling/enroll-group-session`
+Enroll in a group session
+```json
+{
+  "sessionId": "session-uuid-abc"
+}
+```
+
+#### GET `/api/scheduling/me/sessions`
+Retrieve all sessions for authenticated student
 
 ## Project setup
 

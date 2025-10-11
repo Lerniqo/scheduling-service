@@ -1,8 +1,8 @@
 import { registerAs } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Availability } from '../entities/availability.entity';
-import { Booking } from '../entities/booking.entity';
-import { GroupSession } from '../entities/group-session.entity';
+import { Session } from '../entities/session.entity';
+import { SessionAttendee } from '../entities/session-attendee.entity';
 
 export default registerAs('database', (): TypeOrmModuleOptions => {
   // If DATABASE_URL is provided, use it (common for cloud databases like Neon)
@@ -10,7 +10,7 @@ export default registerAs('database', (): TypeOrmModuleOptions => {
     return {
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [Availability, Booking, GroupSession],
+      entities: [Availability, Session, SessionAttendee],
       synchronize: process.env.NODE_ENV !== 'production', // Only for development
       logging: process.env.NODE_ENV === 'development',
       ssl: { rejectUnauthorized: false }, // Required for most cloud databases
@@ -26,7 +26,7 @@ export default registerAs('database', (): TypeOrmModuleOptions => {
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'password',
     database: process.env.DB_NAME || 'scheduling_db',
-    entities: [Availability, Booking, GroupSession],
+    entities: [Availability, Session, SessionAttendee],
     synchronize: process.env.NODE_ENV !== 'production', // Only for development
     logging: process.env.NODE_ENV === 'development',
     ssl:
