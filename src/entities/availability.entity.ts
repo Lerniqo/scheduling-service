@@ -4,68 +4,29 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
 
-export interface Booking {
-  id: string;
-  availability: Availability;
-}
-
-export enum AvailabilityStatus {
-  AVAILABLE = 'available',
-  BOOKED = 'booked',
-  CANCELLED = 'cancelled',
-}
-
-@Entity('availabilities')
+// Teacher availability table for one-on-one sessions
+@Entity('teacher_availability')
 export class Availability {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  availability_id: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  providerId: string; // ID of the service provider (tutor, instructor, etc.)
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  providerName: string;
+  @Column({ type: 'uuid' })
+  teacher_id: string;
 
   @Column({ type: 'timestamp' })
-  startTime: Date;
+  start_time: Date;
 
   @Column({ type: 'timestamp' })
-  endTime: Date;
+  end_time: Date;
 
-  @Column({
-    type: 'enum',
-    enum: AvailabilityStatus,
-    default: AvailabilityStatus.AVAILABLE,
-  })
-  status: AvailabilityStatus;
-
-  @Column({ type: 'int', default: 1 })
-  maxBookings: number; // For group sessions
-
-  @Column({ type: 'int', default: 0 })
-  currentBookings: number;
-
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  location: string; // Physical location or online meeting link
-
-  @Column({ type: 'text', nullable: true })
-  description: string;
-
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  subject: string; // Subject or skill being taught
-
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  price: number; // Price per session
-
-  @OneToMany('Booking', 'availability')
-  bookings: Booking[];
+  @Column({ type: 'boolean', default: false })
+  is_booked: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }
