@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -8,6 +9,7 @@ import { SchedulingModule } from './scheduling/scheduling.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { HealthModule } from './health/health.module';
 import { ZoomModule } from './zoom/zoom.module';
+import { RolesGuard } from './auth/roles.guard';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -68,6 +70,12 @@ import databaseConfig from './config/database.config';
     ZoomModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}
