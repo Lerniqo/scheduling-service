@@ -4,66 +4,36 @@ import {
   Get,
   Param,
   Post,
-  Headers,
-  UnauthorizedException,
-  ForbiddenException,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AvailabilityService } from './availability.service';
 import { UpdateAvailabilitySlotsDto } from './dto/update-availability-slots.dto';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles, UserRole } from '../auth/roles.decorator';
+import type { AuthenticatedRequest } from '../auth/auth.interface';
 
 @Controller('api/scheduling')
+@UseGuards(RolesGuard)
 export class AvailabilityController {
   constructor(private readonly availabilityService: AvailabilityService) {}
 
   // Teacher endpoint: POST /api/scheduling/availability
   @Post('availability')
+  @Roles(UserRole.TEACHER)
   async updateAvailability(
-    @Headers('x-user-id') userId: string,
-    @Headers('x-user-role') userRole: string,
-    @Headers('x-user-permissions') userPermissions: string,
+    @Req() req: AuthenticatedRequest,
     @Body() dto: UpdateAvailabilitySlotsDto,
   ) {
-    if (!userId || !userRole) {
-      throw new UnauthorizedException('Missing user authentication headers');
-    }
-
-    // Only teachers can update their availability
-    if (userRole !== 'teacher') {
-      throw new ForbiddenException('Only teachers can update availability');
-    }
-
-    // Check if user has the required permission
-    const permissions = userPermissions ? userPermissions.split(',') : [];
-    if (!permissions.includes('manage_availability')) {
-      throw new ForbiddenException('Insufficient permissions to manage availability');
-    }
-
-    return this.availabilityService.addOrUpdateAvailability(userId, dto);
+    return this.availabilityService.addOrUpdateAvailability(req.user.id, dto);
   }
 
-  // Student endpoint: GET /api/scheduling/teachers/{teacherId}/availability
+  // Student and Teacher endpoint: GET /api/scheduling/teachers/{teacherId}/availability
   @Get('teachers/:teacherId/availability')
+  @Roles(UserRole.STUDENT, UserRole.TEACHER)
   async getTeacherAvailability(
-    @Headers('x-user-id') userId: string,
-    @Headers('x-user-role') userRole: string,
-    @Headers('x-user-permissions') userPermissions: string,
     @Param('teacherId') teacherId: string,
   ) {
-    if (!userId || !userRole) {
-      throw new UnauthorizedException('Missing user authentication headers');
-    }
-
-    // Both students and teachers can view availability
-    const allowedRoles = ['student', 'teacher'];
-    if (!allowedRoles.includes(userRole)) {
-      throw new ForbiddenException('Invalid user role');
-    }
-
-    const permissions = userPermissions ? userPermissions.split(',') : [];
-    if (!permissions.includes('view_availability')) {
-      throw new ForbiddenException('Insufficient permissions to view availability');
-    }
-
     return this.availabilityService.getAvailableSlots(teacherId);
   }
 }
