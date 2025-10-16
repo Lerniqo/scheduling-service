@@ -42,7 +42,11 @@ export class Session {
   @Column({ type: 'timestamptz' })
   end_time: Date;
 
-  @Column({ type: 'enum', enum: SessionStatus, default: SessionStatus.SCHEDULED })
+  @Column({
+    type: 'enum',
+    enum: SessionStatus,
+    default: SessionStatus.SCHEDULED,
+  })
   status: SessionStatus;
 
   @Column({ type: 'boolean', default: false })
@@ -73,16 +77,16 @@ export class Session {
   @OneToMany('SessionAttendee', 'session')
   attendees: any[];
 
-  @CreateDateColumn({ 
+  @CreateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   created_at: Date;
 
-  @UpdateDateColumn({ 
+  @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP'
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
 }

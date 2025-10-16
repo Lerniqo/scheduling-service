@@ -31,9 +31,7 @@ export class AvailabilityController {
   // Student and Teacher endpoint: GET /api/scheduling/teachers/{teacherId}/availability
   @Get('teachers/:teacherId/availability')
   @Roles(UserRole.STUDENT, UserRole.TEACHER)
-  async getTeacherAvailability(
-    @Param('teacherId') teacherId: string,
-  ) {
+  async getTeacherAvailability(@Param('teacherId') teacherId: string) {
     return this.availabilityService.getAvailableSlots(teacherId);
   }
 }

@@ -123,16 +123,16 @@ export class GroupSession {
   @ManyToMany('Booking', 'groupSessions')
   bookings: Booking[];
 
-  @CreateDateColumn({ 
+  @CreateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
-  @UpdateDateColumn({ 
+  @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP'
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
 }

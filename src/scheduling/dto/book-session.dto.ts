@@ -1,7 +1,4 @@
-import {
-  IsUUID,
-  IsNotEmpty,
-} from 'class-validator';
+import { IsUUID, IsNotEmpty } from 'class-validator';
 
 export class BookSessionDto {
   @IsUUID()

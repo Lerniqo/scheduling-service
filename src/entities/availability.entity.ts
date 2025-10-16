@@ -34,16 +34,16 @@ export class Availability {
   @Column({ type: 'text', nullable: true })
   session_description: string | null;
 
-  @CreateDateColumn({ 
+  @CreateDateColumn({
     type: 'timestamptz',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP',
   })
   created_at: Date;
 
-  @UpdateDateColumn({ 
+  @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP'
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
 }
