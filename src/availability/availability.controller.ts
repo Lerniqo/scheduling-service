@@ -13,7 +13,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { Roles, UserRole } from '../auth/roles.decorator';
 import type { AuthenticatedRequest } from '../auth/auth.interface';
 
-@Controller('api/scheduling')
+@Controller('scheduling')
 @UseGuards(RolesGuard)
 export class AvailabilityController {
   constructor(private readonly availabilityService: AvailabilityService) {}
