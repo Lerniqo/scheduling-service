@@ -5,6 +5,15 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  // Enable CORS
+  app.enableCors({
+    origin: '*', // Allow all origins (for development). Consider restricting in production.
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    optionsSuccessStatus: 200,
+  });
+  
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
