@@ -1,0 +1,180 @@
+
+==============================================
+           TEST EXECUTION SUMMARY
+==============================================
+
+📅 Timestamp: 2025-10-12T09:40:25.833Z
+📊 Total Tests: 29
+✅ Passed: 19
+❌ Failed: 10
+📁 Test Suites: 1
+
+==============================================
+            DETAILED TEST RESULTS
+==============================================
+
+
+1. TEST FILE: configuration-service.spec.ts
+   Status: FAILED
+   Duration: 30086ms
+   Location: C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts
+
+   INDIVIDUAL TESTS:
+   1. ✅ Configuration Testing (Service Environment) Environment Configuration Loading should load configuration from environment variables (20ms)
+   2. ❌ Configuration Testing (Service Environment) Environment Configuration Loading should handle missing environment variables gracefully (9ms)
+      Error: Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeUndefined[2m()[22m
+
+Received: [31m"postgresql://neondb_owner:npg_gzWnQ41KStvc@ep-dawn-fog-ad5e9f4j-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"[39m
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:63:44)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+   3. ✅ Configuration Testing (Service Environment) Environment Configuration Loading should validate required configuration values (4ms)
+   4. ✅ Configuration Testing (Service Environment) Environment Configuration Loading should handle different environment modes (29ms)
+   5. ❌ Configuration Testing (Service Environment) Database Configuration should create valid database configuration (7ms)
+      Error: TypeError: (0 , database_config_1.DatabaseConfig) is not a function
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:149:38)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+   6. ✅ Configuration Testing (Service Environment) Database Configuration should handle invalid database configuration (11ms)
+   7. ❌ Configuration Testing (Service Environment) Database Configuration should configure database connection pooling (1ms)
+      Error: TypeError: (0 , database_config_1.DatabaseConfig) is not a function
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:179:38)
+    at Promise.finally.completed (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:275:16)
+    at runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:343:7)
+   8. ❌ Configuration Testing (Service Environment) Database Configuration should handle database SSL configuration (1ms)
+      Error: TypeError: (0 , database_config_1.DatabaseConfig) is not a function
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:192:38)
+    at Promise.finally.completed (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+    at _callCircusTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+    at C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+    at _runTestsForDescribeBlock (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+    at _runTestsForDescribeBlock (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at _runTestsForDescribeBlock (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+    at run (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+    at runAndTransformResultsToJestFormat (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+    at jestAdapter (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\runner.js:101:19)
+    at runTestInternal (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:275:16)
+    at runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:343:7)
+   9. ❌ Configuration Testing (Service Environment) Application Startup Configuration should start application with default configuration (5006ms)
+      Error: Error: thrown: "Exceeded timeout of 5000 ms for a hook.
+Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:202:5
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:201:3
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:9:1)
+    at Runtime._execModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:275:16)
+    at runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:343:7)
+   10. ❌ Configuration Testing (Service Environment) Application Startup Configuration should configure validation pipes correctly (5025ms)
+      Error: Error: thrown: "Exceeded timeout of 5000 ms for a hook.
+Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:202:5
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:201:3
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:9:1)
+    at Runtime._execModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:275:16)
+    at runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:343:7)
+   11. ❌ Configuration Testing (Service Environment) Application Startup Configuration should configure CORS settings (5018ms)
+      Error: Error: thrown: "Exceeded timeout of 5000 ms for a hook.
+Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:202:5
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:201:3
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:9:1)
+    at Runtime._execModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:275:16)
+    at runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:343:7)
+   12. ❌ Configuration Testing (Service Environment) Application Startup Configuration should configure global prefix (5013ms)
+      Error: Error: thrown: "Exceeded timeout of 5000 ms for a hook.
+Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:202:5
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:201:3
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:9:1)
+    at Runtime._execModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:275:16)
+    at runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:343:7)
+   13. ❌ Configuration Testing (Service Environment) Application Startup Configuration should handle port configuration (5015ms)
+      Error: Error: thrown: "Exceeded timeout of 5000 ms for a hook.
+Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:202:5
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:201:3
+    at _dispatchDescribe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:604:26)
+    at describe (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\jestAdapterInit.js:572:44)
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:9:1)
+    at Runtime._execModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:1268:24)
+    at Runtime._loadModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:944:12)
+    at Runtime.requireModule (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runtime@30.2.0\node_modules\jest-runtime\build\index.js:832:12)
+    at jestAdapter (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-circus@30.2.0\node_modules\jest-circus\build\runner.js:95:13)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runTestInternal (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:275:16)
+    at runTest (C:\Sem 5 Project\scheduling-service\node_modules\.pnpm\jest-runner@30.2.0\node_modules\jest-runner\build\index.js:343:7)
+   14. ✅ Configuration Testing (Service Environment) External Service Configuration should configure Zoom service with valid credentials (12ms)
+   15. ❌ Configuration Testing (Service Environment) External Service Configuration should handle missing Zoom configuration (19ms)
+      Error: Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeUndefined[2m()[22m
+
+Received: [31m"_NOg1l7zRfiTsGKqjBz5RQ"[39m
+    at Object.<anonymous> (C:\Sem 5 Project\scheduling-service\test\configuration\configuration-service.spec.ts:330:44)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+   16. ✅ Configuration Testing (Service Environment) External Service Configuration should validate external service URLs (3ms)
+   17. ✅ Configuration Testing (Service Environment) Logging Configuration should configure appropriate log levels for different environments (7ms)
+   18. ✅ Configuration Testing (Service Environment) Logging Configuration should handle log configuration errors (1ms)
+   19. ✅ Configuration Testing (Service Environment) Security Configuration should configure JWT settings securely (16ms)
+   20. ✅ Configuration Testing (Service Environment) Security Configuration should reject weak JWT secrets (3ms)
+   21. ✅ Configuration Testing (Service Environment) Security Configuration should configure session settings appropriately (7ms)
+   22. ✅ Configuration Testing (Service Environment) Performance Configuration should configure appropriate timeouts (5ms)
+   23. ✅ Configuration Testing (Service Environment) Performance Configuration should configure connection limits (2ms)
+   24. ✅ Configuration Testing (Service Environment) Feature Toggle Configuration should handle feature toggle configuration (15ms)
+   25. ✅ Configuration Testing (Service Environment) Feature Toggle Configuration should provide default values for missing feature toggles (10ms)
+   26. ✅ Configuration Testing (Service Environment) Configuration Validation should validate configuration schema (2ms)
+   27. ✅ Configuration Testing (Service Environment) Configuration Validation should handle configuration type mismatches (1ms)
+   28. ✅ Configuration Testing (Service Environment) Configuration Hot Reload should handle configuration updates gracefully (10ms)
+   29. ✅ Configuration Testing (Service Environment) Configuration Hot Reload should maintain configuration consistency during updates (2ms)
+
+==================================================
